@@ -99,11 +99,14 @@ namespace WarpShift
             return $"{map} {x} {y}";
         }
 
-        public StringMap(IArrayShifter shifter, int length, (int, int) start, (int, int) goal, params Field[] fields)
+        public StringMap(IArrayShifter shifter, int size, (int, int) start, (int, int) goal, params Field[] fields):
+            this(shifter, (size, size), start, goal, fields){}
+
+        public StringMap(IArrayShifter shifter, (int width, int height) size, (int, int) start, (int, int) goal, params Field[] fields)
         {
             this.shifter = shifter;
-            this.length = length;
-            this.map = new string(Field.e[0], length * length * _f);
+            this.size = size;
+            this.map = new string(Field.e[0], size.width * size.height * _f);
 
             this.x = start.Item1;
             this.y = start.Item2;
@@ -116,13 +119,13 @@ namespace WarpShift
                 var counter = 0;
                 foreach (var i in fields)
                 {
-                    this.Set(counter % this.length, (int)Math.Floor((counter * 1.0) / length * 1.0), i);
+                    this.Set(counter % this.size.width, (int)Math.Floor((counter * 1.0) / this.size.width * 1.0), i);
                     counter++;
                 }
             }
         }
 
-        private StringMap(IArrayShifter shifter, int length, string map, int x, int y, int gx, int gy) : this(shifter, length, (x,y), (gx, gy))
+        private StringMap(IArrayShifter shifter, (int, int) size, string map, int x, int y, int gx, int gy) : this(shifter, size, (x,y), (gx, gy))
         {
             this.map = map;
         }
@@ -132,13 +135,13 @@ namespace WarpShift
         public int x, y;
         public int gx, gy;
 
-        public readonly int length;
         private IArrayShifter shifter;
+        public (int width, int height) size;
 
         public bool IsSolved => x == gx && y == gy;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int GetIndex(int x, int y) => x * _f + y * _f * this.length;
+        public int GetIndex(int x, int y) => x * _f + (y * _f * this.size.width);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Field Get(int x, int y)
@@ -166,7 +169,7 @@ namespace WarpShift
 
         public StringMap Clone()
         {
-            return new StringMap(this.shifter, this.length, this.map, this.x, this.y, this.gx, this.gy);
+            return new StringMap(this.shifter, this.size, this.map, this.x, this.y, this.gx, this.gy);
         }
 
 
@@ -217,14 +220,14 @@ namespace WarpShift
             if (cmd.Horizontal)
             {
                 if (movePlayerHor)
-                    m.x = mod(m.x + pm, m.length);// (m.x + pm) % (m.length);
+                    m.x = mod(m.x + pm, m.size.width);// (m.x + pm) % (m.length);
                 if (moveGoalHor)
-                    m.gx = mod(m.gx + pm, m.length);
+                    m.gx = mod(m.gx + pm, m.size.width);
                 if (p)
                 {
 
-                    var replaceWith = m.Get(m.length - 1, l);
-                    for (int i = 0; i < m.length; i++)
+                    var replaceWith = m.Get(m.size.width - 1, l);
+                    for (int i = 0; i < m.size.width; i++)
                     {
                         var v = m.Get(i, l);
                         m.Set(i, l, replaceWith);
@@ -234,7 +237,7 @@ namespace WarpShift
                 else
                 {
                     var replaceWith = m.Get(0, l);
-                    for (int i = m.length - 1; i >= 0; i--)
+                    for (int i = m.size.width - 1; i >= 0; i--)
                     {
                         var v = m.Get(i, l);
                         m.Set(i, l, replaceWith);
@@ -245,14 +248,14 @@ namespace WarpShift
             else
             {
                 if (movePlayerVer)
-                    m.y = mod(m.y + pm, m.length);
+                    m.y = mod(m.y + pm, m.size.height);
                 if (moveGoalVer)
-                    m.gy = mod(m.gy + pm, m.length);
+                    m.gy = mod(m.gy + pm, m.size.height);
 
                 if (p)
                 {
-                    var replaceWith = m.Get(l, m.length - 1);
-                    for (int i = 0; i < m.length; i++)
+                    var replaceWith = m.Get(l, m.size.height - 1);
+                    for (int i = 0; i < m.size.height; i++)
                     {
                         var v = m.Get(l, i);
                         m.Set(l, i, replaceWith);
@@ -262,7 +265,7 @@ namespace WarpShift
                 else
                 {
                     var replaceWith = m.Get(l, 0);
-                    for (int i = m.length - 1; i >= 0; i--)
+                    for (int i = m.size.height - 1; i >= 0; i--)
                     {
                         var v = m.Get(l, i);
                         m.Set(l, i, replaceWith);

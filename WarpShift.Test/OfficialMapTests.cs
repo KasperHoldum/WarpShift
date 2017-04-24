@@ -70,5 +70,44 @@ namespace WarpShift.Test
             Assert.AreEqual(s.limit, solution.Count);
         }
 
+        [TestMethod]
+        public void TestScenario_1_7()
+        {
+            var s = OfficialMaps.Scenario_1_7_3x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_8()
+        {
+            var s = OfficialMaps.Scenario_1_8_3x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_9()
+        {
+            var s = OfficialMaps.Scenario_1_9_3x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_10()
+        {
+            var s = OfficialMaps.Scenario_1_10_3x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
     }
 }

@@ -63,7 +63,7 @@ namespace WarpShift
                 var m2 = Solve(m, counter + 1);
 
                 if (m2 != null)
-                { 
+                {
                     m2.Insert(0, (m, cmd.ToString()));
                     return m2;
                 }
@@ -80,22 +80,25 @@ namespace WarpShift
             if (m.y > 0 && pos.IsOpen(Open.Top) && m.Get(m.x, m.y - 1).IsOpen(Open.Bottom))
                 yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y - 1 };
 
-            if (m.y < m.length - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x, m.y + 1).IsOpen(Open.Top))
+            if (m.y < m.size.height - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x, m.y + 1).IsOpen(Open.Top))
                 yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y + 1 };
 
             if (m.x > 0 && pos.IsOpen(Open.Left) && m.Get(m.x - 1, m.y).IsOpen(Open.Right))
                 yield return new MoveCommand(m.x, m.y) { toX = m.x - 1, toY = m.y };
 
-            if (m.x < m.length - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1, m.y).IsOpen(Open.Left))
+            if (m.x < m.size.width - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1, m.y).IsOpen(Open.Left))
                 yield return new MoveCommand(m.x, m.y) { toX = m.x + 1, toY = m.y };
         }
 
         public IEnumerable<ShiftCommand> GetAvailableShiftCommands(StringMap m)
         {
-            for (int i = 0; i < m.length; i++)
+            for (int i = 0; i < m.size.height; i++)
             {
                 yield return new ShiftCommand() { Horizontal = true, Positive = true, Line = i };
                 yield return new ShiftCommand() { Horizontal = true, Positive = false, Line = i };
+            }
+            for (int i = 0; i < m.size.width; i++)
+            {
                 yield return new ShiftCommand() { Horizontal = false, Positive = true, Line = i };
                 yield return new ShiftCommand() { Horizontal = false, Positive = false, Line = i };
             }
