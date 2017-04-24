@@ -29,7 +29,10 @@ namespace WarpShift
 
         public StringMap Solve(StringMap map, int counter = 0)
         {
-            if (limit < counter)
+            if (map.x == map.gx && map.y == map.gy)
+                return map;
+
+            if (limit <= counter)
                 return null;
 
             var serialized = map.Serialize();
@@ -41,54 +44,49 @@ namespace WarpShift
                     seenMaps[serialized] = counter;
             else
                 seenMaps[serialized] = counter;
-            var currentMap = map;
-            while (currentMap.x != map.gx || currentMap.y != map.gy)
+            foreach (var cmd in GetAvailableMoveCommands(map))
             {
-                foreach(var cmd in GetAvailableMoveCommands(currentMap))
-                {
-                    var m = map.Execute(cmd);
-                    var m2 = Solve(m, counter + 1);
+                var m = map.Execute(cmd);
+                var m2 = Solve(m, counter + 1);
 
-                    if (m2 == null)
-                        // no solution
-                        continue;
-                    else
-                        return m2;
+                if (m2 == null)
+                    // no solution
+                    continue;
+                else
+                    return m2;
 
-                }
-
-                foreach (var cmd in GetAvailableShiftCommands(currentMap))
-                {
-                    var m = map.Execute(cmd);
-                    Solve(m);
-
-                    var m2 = Solve(m);
-
-                    if (m2 == null)
-                        // no solution
-                        continue;
-                    else
-                        return m2;
-                }
             }
-            
-            return map;
+
+            foreach (var cmd in GetAvailableShiftCommands(map))
+            {
+                var m = map.Execute(cmd);
+                var m2 = Solve(m, counter + 1);
+
+                if (m2 == null)
+                    // no solution
+                    continue;
+                else
+                    return m2;
+            }
+
+            // No solution :(
+            return null;
         }
 
         public IEnumerable<MoveCommand> GetAvailableMoveCommands(StringMap m)
         {
-            var pos = m.Get(m.x,m.y);
+            var pos = m.Get(m.x, m.y);
 
-            if (m.y > 0 && pos.IsOpen(Open.Top) && m.Get(m.x,m.y - 1).IsOpen(Open.Bottom))
+            if (m.y > 0 && pos.IsOpen(Open.Top) && m.Get(m.x, m.y - 1).IsOpen(Open.Bottom))
                 yield return new MoveCommand() { toX = m.x, toY = m.y - 1 };
 
-            if (m.y < m.length - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x,m.y + 1).IsOpen(Open.Top))
+            if (m.y < m.length - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x, m.y + 1).IsOpen(Open.Top))
                 yield return new MoveCommand() { toX = m.x, toY = m.y + 1 };
 
-            if (m.x > 0 && pos.IsOpen(Open.Left) && m.Get(m.x - 1,m.y).IsOpen(Open.Right))
+            if (m.x > 0 && pos.IsOpen(Open.Left) && m.Get(m.x - 1, m.y).IsOpen(Open.Right))
                 yield return new MoveCommand() { toX = m.x - 1, toY = m.y };
 
-            if (m.x < m.length - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1,m.y).IsOpen(Open.Left))
+            if (m.x < m.length - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1, m.y).IsOpen(Open.Left))
                 yield return new MoveCommand() { toX = m.x + 1, toY = m.y };
         }
 
@@ -108,7 +106,7 @@ namespace WarpShift
     {
         private Func<(int, int), (int, int), int> h;
 
-        public AStar(Func<(int,int), (int,int),int> heuristic)
+        public AStar(Func<(int, int), (int, int), int> heuristic)
         {
             this.h = heuristic;
         }
@@ -123,19 +121,19 @@ namespace WarpShift
 
         private void Work((int x, int y) start, (int x, int y) goal)
         {
-            var closed = new HashSet<(int, int)>(){ };
+            var closed = new HashSet<(int, int)>() { };
             var open = new HashSet<(int, int)>() { start };
             var cameFrom = new Dictionary<(int, int), (int, int)>();
 
-            var gScore = new Dictionary<(int, int), int>() { { start, 0} };
+            var gScore = new Dictionary<(int, int), int>() { { start, 0 } };
             var fScore = new Dictionary<(int, int), int>();
 
             fScore[start] = h(start, goal);
 
-            (int x,int y) getNextOpen()
+            (int x, int y) getNextOpen()
             {
                 // find lowest fscore
-                return default((int,int));
+                return default((int, int));
             }
             (int x, int y)[] getNeighbors((int x, int y) v)
             {
@@ -151,7 +149,7 @@ namespace WarpShift
                 open.Remove(current);
                 closed.Add(current);
 
-                foreach(var neighbor in getNeighbors(current))
+                foreach (var neighbor in getNeighbors(current))
                 {
                     if (closed.Contains(neighbor))
                         continue; // Ignore the neighbor which is already evaluated.

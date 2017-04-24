@@ -22,12 +22,12 @@ namespace WarpShift
         public const string x = "x";
         public Open OpenWalls;
 
-      
+
 
         public bool IsOpen(Open o) => (o & OpenWalls) == o;
 
         // none
-        public static Field Closed = new Field() { OpenWalls = Open.None};
+        public static Field Closed = new Field() { OpenWalls = Open.None };
 
         // single
         public static Field Top = new Field() { OpenWalls = Open.Top };
@@ -117,7 +117,6 @@ namespace WarpShift
 
         private string map;
 
-        public int startX, startY;
         public int x, y;
         public int gx, gy;
 
@@ -146,8 +145,8 @@ namespace WarpShift
             var clone = this.Clone();
             // ignore check for performance
             //if (cmd.toX - x + cmd.toY - y == 1)
-                clone.x = cmd.toX;
-                clone.y = cmd.toY;
+            clone.x = cmd.toX;
+            clone.y = cmd.toY;
             return clone;
         }
 
@@ -171,7 +170,7 @@ namespace WarpShift
     }
 
 
- 
+
 
     public interface IArrayShifter
     {
@@ -184,6 +183,9 @@ namespace WarpShift
         {
             var movePlayerHor = cmd.Horizontal && cmd.Line == m.y;
             var movePlayerVer = !cmd.Horizontal && cmd.Line == m.x;
+
+            var moveGoalHor = cmd.Horizontal && cmd.Line == m.gy;
+            var moveGoalVer = !cmd.Horizontal && cmd.Line == m.gx;
 
             var x = cmd.Horizontal ? cmd.Line : 0;
             var y = !cmd.Horizontal ? cmd.Line : 0;
@@ -200,8 +202,10 @@ namespace WarpShift
 
             if (cmd.Horizontal)
             {
-                m.x = mod(m.x + pm, m.length);// (m.x + pm) % (m.length);
-
+                if (movePlayerHor)
+                    m.x = mod(m.x + pm, m.length);// (m.x + pm) % (m.length);
+                if (moveGoalHor)
+                    m.gx = mod(m.gx + pm, m.length);
                 if (p)
                 {
 
@@ -209,42 +213,45 @@ namespace WarpShift
                     for (int i = 0; i < m.length; i++)
                     {
                         var v = m.Get(i, l);
-                        m.Set(i,l,replaceWith);
+                        m.Set(i, l, replaceWith);
                         replaceWith = v;
                     }
                 }
                 else
                 {
-                    var replaceWith = m.Get(0,l);
+                    var replaceWith = m.Get(0, l);
                     for (int i = m.length - 1; i >= 0; i--)
                     {
-                        var v = m.Get(i,l);
-                        m.Set(i,l, replaceWith);
+                        var v = m.Get(i, l);
+                        m.Set(i, l, replaceWith);
                         replaceWith = v;
                     }
                 }
             }
             else
             {
-                m.y = mod(m.y + pm, m.length);
+                if (movePlayerVer)
+                    m.y = mod(m.y + pm, m.length);
+                if (moveGoalVer)
+                    m.gy = mod(m.gy + pm, m.length);
 
                 if (p)
                 {
                     var replaceWith = m.Get(l, m.length - 1);
                     for (int i = 0; i < m.length; i++)
                     {
-                        var v = m.Get(l,i);
-                        m.Set(l,i,replaceWith);
+                        var v = m.Get(l, i);
+                        m.Set(l, i, replaceWith);
                         replaceWith = v;
                     }
                 }
                 else
                 {
-                    var replaceWith = m.Get(l,0);
+                    var replaceWith = m.Get(l, 0);
                     for (int i = m.length - 1; i >= 0; i--)
                     {
-                        var v = m.Get(l,i);
-                        m.Set(l,i,replaceWith);
+                        var v = m.Get(l, i);
+                        m.Set(l, i, replaceWith);
                         replaceWith = v;
                     }
                 }
@@ -279,47 +286,18 @@ namespace WarpShift
         /// Positive = Right | Down
         /// </summary>
         public bool Positive;
-    }
 
-    //public class MapTracker
-    //{
-    //    public int curX;
-    //    public int curY;
-    //    public List<object> commands = new List<object>();
-    //    //public (Axis, int)[] ShiftHistory;
-    //    private StringMap map;
-
-    //    public MapTracker(StringMap map)
-    //    {
-    //        this.map = map;
-    //    }
-
-    //    public void Execute(MoveCommand move)
-    //    {
-
-    //    }
-    //}
-
-    public static class MapTestScenarios
-    {
-        public static StringMap Scenario1_2x2(IArrayShifter shifter)
+        public override string ToString()
         {
-            var m = new StringMap(shifter,2)
-            {
-                startX = 0,
-                startY = 1,
-                x = 0,
-                y = 1,
-                gx = 1,
-                gy = 0
-            };
-
-            m.Set(0,0,Field.Closed);
-            m.Set(1,0,Field.Bottom);
-            m.Set(0,1,Field.Right);
-            m.Set(1,1,Field.TopLeft);
-
-            return m;
+            if (Horizontal && Positive)
+                return $"→{Line}";
+            if (Horizontal && !Positive)
+                return $"←{Line}";
+            if (!Horizontal && Positive)
+                return $"↓{Line}";
+            if (!Horizontal && !Positive)
+                return $"↑{Line}";
+            throw new InvalidOperationException("ABE");
         }
     }
 

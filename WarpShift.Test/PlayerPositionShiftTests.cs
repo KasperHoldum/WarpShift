@@ -34,7 +34,7 @@ namespace WarpShift.Test
         {
             var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
 
-            var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = true, Line = 1 });
+            var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = true});
 
             Assert.AreEqual(0, nm.x);
             Assert.AreEqual(0, nm.y);
@@ -45,7 +45,7 @@ namespace WarpShift.Test
         {
             var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
 
-            var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = false, Line = 1 });
+            var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = false});
 
             Assert.AreEqual(0, nm.x);
             Assert.AreEqual(0, nm.y);

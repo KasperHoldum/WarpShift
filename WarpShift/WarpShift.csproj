@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ArrayMap.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MapTestScenarios.cs" />
     <Compile Include="NaiveMapSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
