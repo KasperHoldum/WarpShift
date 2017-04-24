@@ -51,6 +51,7 @@
     <Compile Include="BasicShiftingTests.cs" />
     <Compile Include="MapTests.cs" />
     <Compile Include="NaiveMapSolverTests.cs" />
+    <Compile Include="OfficialMapTests.cs" />
     <Compile Include="PlayerPositionShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

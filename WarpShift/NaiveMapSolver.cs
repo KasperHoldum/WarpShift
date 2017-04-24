@@ -27,10 +27,10 @@ namespace WarpShift
         private Dictionary<string, int> seenMaps = new Dictionary<string, int>();
         private int limit;
 
-        public StringMap Solve(StringMap map, int counter = 0)
+        public List<(StringMap, string)> Solve(StringMap map, int counter = 0)
         {
-            if (map.x == map.gx && map.y == map.gy)
-                return map;
+            if (map.IsSolved)
+                return new List<(StringMap, string)>() { (map, "") };
 
             if (limit <= counter)
                 return null;
@@ -49,11 +49,11 @@ namespace WarpShift
                 var m = map.Execute(cmd);
                 var m2 = Solve(m, counter + 1);
 
-                if (m2 == null)
-                    // no solution
-                    continue;
-                else
+                if (m2 != null)
+                {
+                    m2.Insert(0, (m, cmd.ToString()));
                     return m2;
+                }
 
             }
 
@@ -62,11 +62,11 @@ namespace WarpShift
                 var m = map.Execute(cmd);
                 var m2 = Solve(m, counter + 1);
 
-                if (m2 == null)
-                    // no solution
-                    continue;
-                else
+                if (m2 != null)
+                { 
+                    m2.Insert(0, (m, cmd.ToString()));
                     return m2;
+                }
             }
 
             // No solution :(
@@ -78,16 +78,16 @@ namespace WarpShift
             var pos = m.Get(m.x, m.y);
 
             if (m.y > 0 && pos.IsOpen(Open.Top) && m.Get(m.x, m.y - 1).IsOpen(Open.Bottom))
-                yield return new MoveCommand() { toX = m.x, toY = m.y - 1 };
+                yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y - 1 };
 
             if (m.y < m.length - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x, m.y + 1).IsOpen(Open.Top))
-                yield return new MoveCommand() { toX = m.x, toY = m.y + 1 };
+                yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y + 1 };
 
             if (m.x > 0 && pos.IsOpen(Open.Left) && m.Get(m.x - 1, m.y).IsOpen(Open.Right))
-                yield return new MoveCommand() { toX = m.x - 1, toY = m.y };
+                yield return new MoveCommand(m.x, m.y) { toX = m.x - 1, toY = m.y };
 
             if (m.x < m.length - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1, m.y).IsOpen(Open.Left))
-                yield return new MoveCommand() { toX = m.x + 1, toY = m.y };
+                yield return new MoveCommand(m.x, m.y) { toX = m.x + 1, toY = m.y };
         }
 
         public IEnumerable<ShiftCommand> GetAvailableShiftCommands(StringMap m)

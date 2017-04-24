@@ -45,6 +45,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="MapTestScenarios.cs" />
     <Compile Include="NaiveMapSolver.cs" />
+    <Compile Include="OfficialMaps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
