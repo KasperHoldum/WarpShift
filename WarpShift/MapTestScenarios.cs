@@ -3,7 +3,7 @@
 
     public static class MapTestScenarios
     {
-        public static StringMap Scenario1_2x2(IArrayShifter shifter)
+        public static StringMap Scenario1_2x2(IMapShifter shifter)
         {
             var m = new StringMap(shifter, 2, (0, 1), (1, 0));
             m.Set(0, 0, Field.Closed);

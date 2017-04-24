@@ -13,7 +13,7 @@ namespace WarpShift.Test
         //[TestMethod]
         public void BasicSolve()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
             var solver = new NaiveMapSolver(3);
 
             var solved = solver.Solve(map);
@@ -26,7 +26,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void BasicShiftCommandsAvailableTest()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
             var solver = new NaiveMapSolver(3);
 
             var solved = solver.GetAvailableShiftCommands(map);
@@ -37,7 +37,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void BasicMoveCommandsAvailableTest()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
             var solver = new NaiveMapSolver(3);
 
             var solved = solver.GetAvailableMoveCommands(map);

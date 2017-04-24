@@ -41,12 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayCopyShifter.cs" />
+    <Compile Include="ArrayHelper.cs" />
     <Compile Include="ArrayMap.cs" />
-    <Compile Include="Map.cs" />
+    <Compile Include="Axis.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="IArrayShifter.cs" />
     <Compile Include="MapTestScenarios.cs" />
+    <Compile Include="MoveCommand.cs" />
     <Compile Include="NaiveMapSolver.cs" />
     <Compile Include="OfficialMaps.cs" />
+    <Compile Include="Open.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShiftCommand.cs" />
+    <Compile Include="StringMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

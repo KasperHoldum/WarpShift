@@ -13,7 +13,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_1()
         {
-            var s = OfficialMaps.Scenario_1_1_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S1(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -23,7 +23,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_2()
         {
-            var s = OfficialMaps.Scenario_1_2_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S2(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -33,7 +33,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_3()
         {
-            var s = OfficialMaps.Scenario_1_3_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S3(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -43,7 +43,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_4()
         {
-            var s = OfficialMaps.Scenario_1_4_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S4(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -53,7 +53,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_5()
         {
-            var s = OfficialMaps.Scenario_1_5_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S5(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -63,7 +63,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_6()
         {
-            var s = OfficialMaps.Scenario_1_6_2x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S6(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -73,7 +73,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_7()
         {
-            var s = OfficialMaps.Scenario_1_7_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S7(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -83,7 +83,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_8()
         {
-            var s = OfficialMaps.Scenario_1_8_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S8(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -93,7 +93,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_9()
         {
-            var s = OfficialMaps.Scenario_1_9_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S9(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -103,7 +103,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_10()
         {
-            var s = OfficialMaps.Scenario_1_10_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S10(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -114,7 +114,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_11()
         {
-            var s = OfficialMaps.Scenario_1_11_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S11(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -125,7 +125,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_12()
         {
-            var s = OfficialMaps.Scenario_1_12_3x2(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S12(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -135,7 +135,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_13()
         {
-            var s = OfficialMaps.Scenario_1_13_3x3(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S13(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -145,7 +145,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_14()
         {
-            var s = OfficialMaps.Scenario_1_14_3x3(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S14(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
@@ -155,7 +155,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void TestScenario_1_15()
         {
-            var s = OfficialMaps.Scenario_1_15_3x3(new ArrayCopyShifter());
+            var s = OfficialMaps.Chapter1.S15(new MapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);

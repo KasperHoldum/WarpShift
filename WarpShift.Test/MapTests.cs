@@ -8,7 +8,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void MapTest()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
 
             //map.Execute(new ShiftCommand() { Horizontal = true });
 
