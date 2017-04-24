@@ -48,8 +48,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicShiftingTests.cs" />
+    <Compile Include="MapTests.cs" />
     <Compile Include="NaiveMapSolverTests.cs" />
-    <Compile Include="Scenario1Test.cs" />
+    <Compile Include="PlayerPositionShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

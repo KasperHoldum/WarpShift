@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,11 @@ namespace WarpShift
     }
     public struct Field
     {
+        public const string e = "-";
+        public const string x = "x";
         public Open OpenWalls;
+
+      
 
         public bool IsOpen(Open o) => (o & OpenWalls) == o;
 
@@ -51,74 +56,131 @@ namespace WarpShift
         // all
         public static Field All = new Field() { OpenWalls = Open.Right | Open.Bottom | Open.Top | Open.Left };
 
+        private static Dictionary<string, Field> lookup = new Dictionary<string, Field>()
+        {
+            {$"{e}{e}{e}{e}", Closed},
+            {$"{x}{e}{e}{e}", Top},
+            {$"{e}{x}{e}{e}", Right},
+            {$"{e}{e}{x}{e}", Bottom},
+            {$"{e}{e}{e}{x}", Left},
+            {$"{e}{x}{e}{x}", RightLeft},
+            {$"{e}{x}{x}{e}", RightBottom},
+            {$"{x}{x}{e}{e}", RightTop},
+            {$"{e}{x}{x}{x}", RightLeftBottom},
+            {$"{x}{x}{e}{x}", RightLeftTop},
+            {$"{x}{x}{x}{e}", RightTopBottom},
+            {$"{x}{e}{x}{e}", TopBottom},
+            {$"{x}{e}{e}{x}", TopLeft},
+            {$"{x}{e}{x}{x}", TopBottomLeft},
+            {$"{e}{e}{x}{x}", BottomLeft},
+            {$"{x}{x}{x}{x}", All},
+        };
+
         public override string ToString()
         {
-            return this.OpenWalls.ToString();
+            return
+                ((this.OpenWalls & Open.Top) != 0 ? x : e)
+                + ((this.OpenWalls & Open.Right) != 0 ? x : e)
+                + ((this.OpenWalls & Open.Bottom) != 0 ? x : e)
+                + ((this.OpenWalls & Open.Left) != 0 ? x : e);
         }
-
+        public static Field FromString(string s)
+        {
+            return lookup[s];
+        }
     }
 
-    //public static class MapSerializer
-    //{
-    //    public static string Serialize(Map m)
-    //    {
-    //        return $"{m.x} {m.y} {SerializeFields(m.map, m.length)}";
-    //    }
-
-    //    private static object SerializeFields(Field[][] map, int length)
-    //    {
-    //        for (int i = 0; i < length; i++)
-    //        {
-
-    //        }
-    //    }
-    //}
-
-
-    public class Map
+    public class StringMap
     {
-        public Field[][] map;
+        private const int _f = 4;
+
+        public string Serialize()
+        {
+            return $"{map} {x} {y}";
+        }
+
+        public StringMap(IArrayShifter shifter, int length)
+        {
+            this.shifter = shifter;
+            this.length = length;
+            this.map = new string(Field.e[0], length * length * _f);
+        }
+
+        private StringMap(IArrayShifter shifter, int length, string map, int x, int y, int gx, int gy) : this(shifter, length)
+        {
+            this.map = map;
+            this.x = x;
+            this.y = y;
+            this.gx = gx;
+            this.gy = gy;
+        }
+
+        private string map;
+
         public int startX, startY;
         public int x, y;
         public int gx, gy;
 
-        public int length;
+        public readonly int length;
         private IArrayShifter shifter;
 
-        public Map(IArrayShifter shifter)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetIndex(int x, int y) => x * _f + y * _f * this.length;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Field Get(int x, int y)
         {
-            this.shifter = shifter;
+            var startIndex = GetIndex(x, y);
+
+            return Field.FromString(map.Substring(startIndex, _f));
         }
-
-
-        public void Execute(MoveCommand cmd)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Set(int x, int y, Field value)
         {
+            var index = GetIndex(x, y);
+            map = map.Remove(index, _f);
+            map = map.Insert(index, value.ToString());
+        }
+        public StringMap Execute(MoveCommand cmd)
+        {
+            var clone = this.Clone();
             // ignore check for performance
             //if (cmd.toX - x + cmd.toY - y == 1)
-            {
-                x = cmd.toX;
-                y = cmd.toY;
-            }
+                clone.x = cmd.toX;
+                clone.y = cmd.toY;
+            return clone;
         }
 
-        public void Execute(ShiftCommand cmd)
+        public StringMap Clone()
         {
+            return new StringMap(this.shifter, this.length, this.map, this.x, this.y, this.gx, this.gy);
+        }
+
+
+        public StringMap Execute(ShiftCommand cmd)
+        {
+            var clone = this.Clone();
             // move player
             var movePlayer = cmd.Line == x || cmd.Line == y;
 
             // move map
-            shifter.Shift(cmd, this);
+            shifter.Shift(cmd, clone);
+
+            return clone;
         }
     }
 
+
+ 
+
     public interface IArrayShifter
     {
-        void Shift(ShiftCommand cmd, Map map);
+        void Shift(ShiftCommand cmd, StringMap map);
     }
 
     public class ArrayCopyShifter : IArrayShifter
     {
-        public void Shift(ShiftCommand cmd, Map m)
+        public void Shift(ShiftCommand cmd, StringMap m)
         {
             var movePlayerHor = cmd.Horizontal && cmd.Line == m.y;
             var movePlayerVer = !cmd.Horizontal && cmd.Line == m.x;
@@ -142,22 +204,22 @@ namespace WarpShift
 
                 if (p)
                 {
-                    
-                    var replaceWith = m.map[m.length - 1][l];
+
+                    var replaceWith = m.Get(m.length - 1, l);
                     for (int i = 0; i < m.length; i++)
                     {
-                        var v = m.map[i][l];
-                        m.map[i][l] = replaceWith;
+                        var v = m.Get(i, l);
+                        m.Set(i,l,replaceWith);
                         replaceWith = v;
                     }
                 }
                 else
                 {
-                    var replaceWith = m.map[0][l];
+                    var replaceWith = m.Get(0,l);
                     for (int i = m.length - 1; i >= 0; i--)
                     {
-                        var v = m.map[i][l];
-                        m.map[i][l] = replaceWith;
+                        var v = m.Get(i,l);
+                        m.Set(i,l, replaceWith);
                         replaceWith = v;
                     }
                 }
@@ -168,21 +230,21 @@ namespace WarpShift
 
                 if (p)
                 {
-                    var replaceWith = m.map[l][m.length - 1];
+                    var replaceWith = m.Get(l, m.length - 1);
                     for (int i = 0; i < m.length; i++)
                     {
-                        var v = m.map[l][i];
-                        m.map[l][i] = replaceWith;
+                        var v = m.Get(l,i);
+                        m.Set(l,i,replaceWith);
                         replaceWith = v;
                     }
                 }
                 else
                 {
-                    var replaceWith = m.map[l][0];
+                    var replaceWith = m.Get(l,0);
                     for (int i = m.length - 1; i >= 0; i--)
                     {
-                        var v = m.map[l][i];
-                        m.map[l][i] = replaceWith;
+                        var v = m.Get(l,i);
+                        m.Set(l,i,replaceWith);
                         replaceWith = v;
                     }
                 }
@@ -219,33 +281,31 @@ namespace WarpShift
         public bool Positive;
     }
 
-    public class MapTracker
-    {
-        public int curX;
-        public int curY;
-        public List<object> commands = new List<object>();
-        //public (Axis, int)[] ShiftHistory;
-        private Map map;
+    //public class MapTracker
+    //{
+    //    public int curX;
+    //    public int curY;
+    //    public List<object> commands = new List<object>();
+    //    //public (Axis, int)[] ShiftHistory;
+    //    private StringMap map;
 
-        public MapTracker(Map map)
-        {
-            this.map = map;
-        }
+    //    public MapTracker(StringMap map)
+    //    {
+    //        this.map = map;
+    //    }
 
-        public void Execute(MoveCommand move)
-        {
+    //    public void Execute(MoveCommand move)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
     public static class MapTestScenarios
     {
-        public static Map Scenario1_2x2(IArrayShifter shifter)
+        public static StringMap Scenario1_2x2(IArrayShifter shifter)
         {
-            var m = new Map(shifter)
+            var m = new StringMap(shifter,2)
             {
-                map = ArrayHelper.InitializeArray(2),
-                length = 2,
                 startX = 0,
                 startY = 1,
                 x = 0,
@@ -254,10 +314,10 @@ namespace WarpShift
                 gy = 0
             };
 
-            m.map[0][0] = Field.Closed;
-            m.map[1][0] = Field.Bottom;
-            m.map[0][1] = Field.Right;
-            m.map[1][1] = Field.TopLeft;
+            m.Set(0,0,Field.Closed);
+            m.Set(1,0,Field.Bottom);
+            m.Set(0,1,Field.Right);
+            m.Set(1,1,Field.TopLeft);
 
             return m;
         }
