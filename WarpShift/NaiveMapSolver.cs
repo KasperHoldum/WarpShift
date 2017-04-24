@@ -30,7 +30,7 @@ namespace WarpShift
         public List<(StringMap, string)> Solve(StringMap map, int counter = 0)
         {
             if (map.IsSolved)
-                return new List<(StringMap, string)>() { (map, "") };
+                return new List<(StringMap, string)>() { };
 
             if (limit <= counter)
                 return null;

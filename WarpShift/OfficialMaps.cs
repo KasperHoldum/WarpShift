@@ -4,39 +4,65 @@
     {
         public static (StringMap, int limit) Scenario_1_1_2x2(IArrayShifter shifter)
         {
-            var m = new StringMap(shifter, 2)
-            {
-                x = 0,
-                y = 1,
-                gx = 1,
-                gy = 0
-            };
-
-            m.Set(0, 0, Field.Closed);
-            m.Set(1, 0, Field.Left);
-            m.Set(0, 1, Field.Right);
-            m.Set(1, 1, Field.Closed);
+            var m = new StringMap(shifter, 2, (0, 1), (1, 0),
+            Field.Closed,Field.Left,
+            Field.Right,Field.Closed);
 
             return (m,2);
         }
 
         public static (StringMap, int limit) Scenario_1_2_2x2(IArrayShifter shifter)
         {
-            var m = new StringMap(shifter, 2)
-            {
-                x = 0,
-                y = 1,
-                gx = 1,
-                gy = 0
-            };
-
-            m.Set(0, 0, Field.Closed);
-            m.Set(1, 0, Field.Right);
-            m.Set(0, 1, Field.Left);
-            m.Set(1, 1, Field.Closed);
+            var m = new StringMap(shifter, 2, (0, 1), (1, 0),
+            Field.Closed,Field.Right,
+            Field.Left, Field.Closed);
 
             return (m, 3);
         }
 
+        public static (StringMap, int limit) Scenario_1_3_2x2(IArrayShifter shifter)
+        {
+            var m = new StringMap(shifter, 2, (1, 0), (0, 1),
+             Field.Closed,Field.Top,
+             Field.Bottom,Field.Closed);
+
+            return (m, 3);
+        }
+
+        public static (StringMap, int limit) Scenario_1_4_2x2(IArrayShifter shifter)
+        {
+            var m = new StringMap(shifter, 2, (0, 1), (1, 1),
+                Field.RightBottom, Field.Left,
+                Field.TopLeft, Field.RightTop);
+
+            return (m, 2);
+        }
+
+        public static (StringMap, int limit) Scenario_1_5_2x2(IArrayShifter shifter)
+        {
+            var m = new StringMap(shifter, 2, (0, 0), (1, 1),
+                Field.Bottom, Field.Closed,
+                Field.Top, Field.Bottom);
+
+            return (m, 4);
+        }
+
+        public static (StringMap, int limit) Scenario_1_6_2x2(IArrayShifter shifter)
+        {
+            var m = new StringMap(shifter, 2, (1, 0), (1, 1),
+                Field.Right, Field.Left,
+                Field.RightTop, Field.Right);
+
+            return (m, 3);
+        }
+
+        public static (StringMap, int limit) Scenario_1_6_2x2(IArrayShifter shifter)
+        {
+            var m = new StringMap(shifter, 2, (1, 0), (1, 1),
+                Field.Right, Field.Left,
+                Field.RightTop, Field.Right);
+
+            return (m, 3);
+        }
     }
 }

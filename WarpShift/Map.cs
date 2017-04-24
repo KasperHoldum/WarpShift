@@ -99,20 +99,32 @@ namespace WarpShift
             return $"{map} {x} {y}";
         }
 
-        public StringMap(IArrayShifter shifter, int length)
+        public StringMap(IArrayShifter shifter, int length, (int, int) start, (int, int) goal, params Field[] fields)
         {
             this.shifter = shifter;
             this.length = length;
             this.map = new string(Field.e[0], length * length * _f);
+
+            this.x = start.Item1;
+            this.y = start.Item2;
+
+            this.gx = goal.Item1;
+            this.gy = goal.Item2;
+
+            if (fields != null)
+            {
+                var counter = 0;
+                foreach (var i in fields)
+                {
+                    this.Set(counter % this.length, (int)Math.Floor((counter * 1.0) / length * 1.0), i);
+                    counter++;
+                }
+            }
         }
 
-        private StringMap(IArrayShifter shifter, int length, string map, int x, int y, int gx, int gy) : this(shifter, length)
+        private StringMap(IArrayShifter shifter, int length, string map, int x, int y, int gx, int gy) : this(shifter, length, (x,y), (gx, gy))
         {
             this.map = map;
-            this.x = x;
-            this.y = y;
-            this.gx = gx;
-            this.gy = gy;
         }
 
         private string map;

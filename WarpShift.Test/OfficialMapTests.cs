@@ -17,7 +17,7 @@ namespace WarpShift.Test
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
-            Assert.AreEqual(s.limit + 1, solution.Count);
+            Assert.AreEqual(s.limit, solution.Count);
         }
 
         [TestMethod]
@@ -27,7 +27,48 @@ namespace WarpShift.Test
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
             var solution = nms.Solve(s.Item1, 0);
-            Assert.AreEqual(s.limit +1, solution.Count);
+            Assert.AreEqual(s.limit, solution.Count);
         }
+
+        [TestMethod]
+        public void TestScenario_1_3()
+        {
+            var s = OfficialMaps.Scenario_1_3_2x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_4()
+        {
+            var s = OfficialMaps.Scenario_1_4_2x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_5()
+        {
+            var s = OfficialMaps.Scenario_1_5_2x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
+        [TestMethod]
+        public void TestScenario_1_6()
+        {
+            var s = OfficialMaps.Scenario_1_6_2x2(new ArrayCopyShifter());
+            NaiveMapSolver nms = new NaiveMapSolver(s.limit);
+
+            var solution = nms.Solve(s.Item1, 0);
+            Assert.AreEqual(s.limit, solution.Count);
+        }
+
     }
 }
