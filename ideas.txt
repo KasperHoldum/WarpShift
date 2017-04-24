@@ -1,0 +1,1 @@
+hashmap and position with number of moves to limit space search

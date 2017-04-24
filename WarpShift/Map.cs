@@ -22,11 +22,11 @@ namespace WarpShift
         public bool IsOpen(Open o) => (o & OpenWalls) == o;
 
         // none
-        public static Field Closed = new Field();
+        public static Field Closed = new Field() { OpenWalls = Open.None};
 
         // single
         public static Field Top = new Field() { OpenWalls = Open.Top };
-        public static Field Bottom = new Field() { OpenWalls = Open. Bottom };
+        public static Field Bottom = new Field() { OpenWalls = Open.Bottom };
         public static Field Left = new Field() { OpenWalls = Open.Left };
         public static Field Right = new Field() { OpenWalls = Open.Right };
 
@@ -51,17 +51,38 @@ namespace WarpShift
         // all
         public static Field All = new Field() { OpenWalls = Open.Right | Open.Bottom | Open.Top | Open.Left };
 
-     
+        public override string ToString()
+        {
+            return this.OpenWalls.ToString();
+        }
+
     }
+
+    //public static class MapSerializer
+    //{
+    //    public static string Serialize(Map m)
+    //    {
+    //        return $"{m.x} {m.y} {SerializeFields(m.map, m.length)}";
+    //    }
+
+    //    private static object SerializeFields(Field[][] map, int length)
+    //    {
+    //        for (int i = 0; i < length; i++)
+    //        {
+
+    //        }
+    //    }
+    //}
 
 
     public class Map
     {
         public Field[][] map;
-        public int startX;
-        public int startY;
-        public int x;
-        public int y;
+        public int startX, startY;
+        public int x, y;
+        public int gx, gy;
+
+        public int length;
         private IArrayShifter shifter;
 
         public Map(IArrayShifter shifter)
@@ -82,6 +103,10 @@ namespace WarpShift
 
         public void Execute(ShiftCommand cmd)
         {
+            // move player
+            var movePlayer = cmd.Line == x || cmd.Line == y;
+
+            // move map
             shifter.Shift(cmd, this);
         }
     }
@@ -93,9 +118,75 @@ namespace WarpShift
 
     public class ArrayCopyShifter : IArrayShifter
     {
-        public void Shift(ShiftCommand cmd, Map map)
+        public void Shift(ShiftCommand cmd, Map m)
         {
-            throw new NotImplementedException();
+            var movePlayerHor = cmd.Horizontal && cmd.Line == m.y;
+            var movePlayerVer = !cmd.Horizontal && cmd.Line == m.x;
+
+            var x = cmd.Horizontal ? cmd.Line : 0;
+            var y = !cmd.Horizontal ? cmd.Line : 0;
+            var p = cmd.Positive;
+            var l = cmd.Line;
+
+            var pm = cmd.Positive ? 1 : -1;
+
+            int mod(int xx, int mm)
+            {
+                int r = xx % mm;
+                return r < 0 ? r + mm : r;
+            }
+
+            if (cmd.Horizontal)
+            {
+                m.x = mod(m.x + pm, m.length);// (m.x + pm) % (m.length);
+
+                if (p)
+                {
+                    
+                    var replaceWith = m.map[m.length - 1][l];
+                    for (int i = 0; i < m.length; i++)
+                    {
+                        var v = m.map[i][l];
+                        m.map[i][l] = replaceWith;
+                        replaceWith = v;
+                    }
+                }
+                else
+                {
+                    var replaceWith = m.map[0][l];
+                    for (int i = m.length - 1; i >= 0; i--)
+                    {
+                        var v = m.map[i][l];
+                        m.map[i][l] = replaceWith;
+                        replaceWith = v;
+                    }
+                }
+            }
+            else
+            {
+                m.y = mod(m.y + pm, m.length);
+
+                if (p)
+                {
+                    var replaceWith = m.map[l][m.length - 1];
+                    for (int i = 0; i < m.length; i++)
+                    {
+                        var v = m.map[l][i];
+                        m.map[l][i] = replaceWith;
+                        replaceWith = v;
+                    }
+                }
+                else
+                {
+                    var replaceWith = m.map[l][0];
+                    for (int i = m.length - 1; i >= 0; i--)
+                    {
+                        var v = m.map[l][i];
+                        m.map[l][i] = replaceWith;
+                        replaceWith = v;
+                    }
+                }
+            }
         }
     }
 
@@ -111,7 +202,7 @@ namespace WarpShift
         ShiftWorld
     }
 
-    public class MoveCommand 
+    public class MoveCommand
     {
         public int toX;
         public int toY;
@@ -119,6 +210,7 @@ namespace WarpShift
 
     public class ShiftCommand
     {
+        public int Line;
         public bool Horizontal;
 
         /// <summary>
@@ -152,13 +244,20 @@ namespace WarpShift
         {
             var m = new Map(shifter)
             {
-                map = ArrayHelper.InitializeArray(2)
+                map = ArrayHelper.InitializeArray(2),
+                length = 2,
+                startX = 0,
+                startY = 1,
+                x = 0,
+                y = 1,
+                gx = 1,
+                gy = 0
             };
 
             m.map[0][0] = Field.Closed;
             m.map[1][0] = Field.Bottom;
             m.map[0][1] = Field.Right;
-            m.map[1][1] = Field.Closed;
+            m.map[1][1] = Field.TopLeft;
 
             return m;
         }
