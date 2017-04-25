@@ -12,4 +12,11 @@ Implemented:
 
 Chapter progress:
 - Chapter 1: Done
-- Chapter 2: Colored openings not implemented yet
+- Chapter 2: Finished all not requiring picking up chip.
+
+
+Leaderboard:
+- Chapter 2-11: 59ms
+- Chapter 3-02: 14600ms
+- Chapter 3-05: 4900ms
+- Chapter 3-15: 15800ms

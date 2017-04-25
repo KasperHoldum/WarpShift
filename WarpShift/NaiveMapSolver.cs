@@ -75,19 +75,41 @@ namespace WarpShift
 
         public IEnumerable<MoveCommand> GetAvailableMoveCommands(StringMap m)
         {
-            var pos = m.Get(m.x, m.y);
+            // player position
+            var pp = m.Get(m.x, m.y);
 
-            if (m.y > 0 && pos.IsOpen(Open.Top) && m.Get(m.x, m.y - 1).IsOpen(Open.Bottom))
-                yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y - 1 };
 
-            if (m.y < m.size.height - 1 && pos.IsOpen(Open.Bottom) && m.Get(m.x, m.y + 1).IsOpen(Open.Top))
-                yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y + 1 };
+            if (m.y > 0)
+            {
+                var up = m.Get(m.x, m.y - 1);
+                if (Field.IsOpen(pp, Open.Top, up, Open.Bottom))
+                {
+                    yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y - 1 };
+                }
+            }
+            if (m.y < m.size.height - 1)
+            {
+                if (Field.IsOpen(pp, Open.Bottom, m.Get(m.x, m.y + 1), Open.Top))
+                {
+                    yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y + 1 };
+                }
+            }
 
-            if (m.x > 0 && pos.IsOpen(Open.Left) && m.Get(m.x - 1, m.y).IsOpen(Open.Right))
-                yield return new MoveCommand(m.x, m.y) { toX = m.x - 1, toY = m.y };
+            if (m.x > 0)
+            {
+                if (Field.IsOpen(pp, Open.Left, m.Get(m.x - 1, m.y), Open.Right))
+                {
+                    yield return new MoveCommand(m.x, m.y) { toX = m.x - 1, toY = m.y };
+                }
+            }
 
-            if (m.x < m.size.width - 1 && pos.IsOpen(Open.Right) && m.Get(m.x + 1, m.y).IsOpen(Open.Left))
-                yield return new MoveCommand(m.x, m.y) { toX = m.x + 1, toY = m.y };
+            if (m.x < m.size.width - 1)
+            {
+                if (Field.IsOpen(pp, Open.Right, m.Get(m.x + 1, m.y), Open.Left))
+                {
+                    yield return new MoveCommand(m.x, m.y) { toX = m.x + 1, toY = m.y };
+                }
+            }
         }
 
         public IEnumerable<ShiftCommand> GetAvailableShiftCommands(StringMap m)

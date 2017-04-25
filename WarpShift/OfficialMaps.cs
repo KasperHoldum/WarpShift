@@ -146,12 +146,86 @@
         {
             public static (StringMap, int limit) S1(IMapShifter shifter)
             {
-                var m = new StringMap(shifter, (3, 3), (0, 0), (2, 1),
-                    Field.Left, Field.Closed, Field.RightBottom,
-                    Field.TopBottom, Field.Closed, Field.Bottom,
-                    Field.RightTop, Field.Top, Field.Closed);
+                var m = new StringMap(shifter, (2, 2), (0, 1), (1, 0),
+                    Field.RightBottom, new Field((Open.Left, Color.P)),
+                    new Field((Open.Right, Color.P)), Field.Closed);
+
+                return (m, 2);
+            }
+
+            public static (StringMap, int limit) S2(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 2), (0, 0), (0, 1),
+                    Field.Bottom, new Field((Open.Left, Color.P), (Open.Right, Color.N)), Field.Left,
+                    new Field((Open.Right, Color.P)), Field.Closed, Field.TopLeft);
 
                 return (m, 5);
+            }
+
+            public static (StringMap, int limit) S3(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 2), (0, 0), (1, 1),
+                    Field.Bottom, Field.Right, new Field((Open.Bottom, Color.P), (Open.Right, Color.P)),
+                    Field.Closed, new Field((Open.Top, Color.P)), new Field((Open.Left, Color.P), (Open.Top, Color.N)));
+
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S4(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 2), (0, 1), (2, 1),
+                    new Field((Open.Left, Color.P), (Open.Bottom, Color.P)), Field.Right, new Field((Open.Left, Color.N), (Open.Right, Color.P), (Open.Bottom, Color.N)),
+                    Field.RightTop, Field.Left, new Field((Open.Top, Color.P)));
+
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S5(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 2), (1, 0), (1, 1),
+                    new Field((Open.Left, Color.P), (Open.Bottom, Color.P)), Field.Right, new Field((Open.Left, Color.N), (Open.Right, Color.P)),
+                    new Field((Open.Left, Color.N), (Open.Bottom, Color.P)), Field.PinkTop, Field.Closed);
+
+                return (m, 4);
+            }
+
+            public static (StringMap, int limit) S6(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 0), (2, 0),
+                    Field.Right, Field.BottomLeft, Field.PinkBottom,
+                    new Field((Open.Top, Color.P), (Open.Right, Color.N), (Open.Bottom, Color.N)), Field.TopLeft, new Field((Open.Top, Color.P), (Open.Bottom, Color.N)),
+                    Field.RightTop, Field.RightLeft, Field.TopLeft);
+
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S7(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 2), (1, 1),
+                    new Field((Open.Bottom, Color.N), (Open.Right, Color.P)), Field.Closed, Field.Closed,
+                    Field.Closed, new Field((Open.Left, Color.P), (Open.Right, Color.P)), new Field((Open.Right, Color.P), (Open.Bottom, Color.N)),
+                    Field.Right, Field.TopLeft, Field.RightTop);
+
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S8(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (2, 2), (0, 1),
+                    new Field((Open.Top, Color.N), (Open.Bottom, Color.P)), Field.Closed, Field.Closed,
+                    Field.PinkLeft, Field.RightLeft, new Field((Open.Left, Color.N), (Open.Top, Color.P), (Open.Right, Color.P)),
+                    Field.RightBottom, Field.RightLeft, Field.Left);
+
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S9(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (1, 1), (0, 1),
+                    Field.RightTop, Field.RightLeft, Field.BottomLeft,
+                    Field.PinkRight, Field.Right, Field.TopLeft,
+                    Field.Closed, Field.Closed, new Field((Open.Top, Color.N), (Open.Left, Color.P), (Open.Bottom, Color.N)));
+                return (m, 6);
             }
         }
     }
