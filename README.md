@@ -20,3 +20,4 @@ Leaderboard:
 
 Benchmarks for finding all optimal solutions:
 - Chapter 2-11: 26ms - 1 solution
+- Chapter 3-02: TBD
