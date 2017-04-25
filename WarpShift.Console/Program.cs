@@ -31,7 +31,8 @@ namespace WarpShift.Console
             CurrentThread.ProcessorAffinity = new IntPtr(1);
 
             //var scenario = MapTestScenarios.Scenario1_2x2(new ArrayCopyShifter());
-            var s = OfficialMaps.Chapter2.S11(new StringMapShifter());
+            //var s = OfficialMaps.Chapter2.S11(new StringMapShifter());
+            var s = OfficialMaps.Chapter2.S15(new StringMapShifter());
             NaiveMapSolver nms = new NaiveMapSolver(s.limit);
 
           

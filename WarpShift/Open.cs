@@ -3,7 +3,7 @@
 namespace WarpShift
 {
     [Flags]
-    public enum Open
+    public enum O
     {
         None = 0,
         Top = 1,

@@ -6,13 +6,9 @@ Idea for 1st attempt:
 1. Fast hash function to compare states
 2. Heavily pruning of the search space via an admissable distance to goal heuristic (A* comes to mind)
 
-Implemented:
-1. State hash based on strings representation of map
-2. Prunning of search space 
-
 Chapter progress:
 - Chapter 1: Done
-- Chapter 2: Done 1-11, missing 12-17
+- Chapter 2: Done
 - Chapter 3: Not started
 - Chapter 4: Not started
 

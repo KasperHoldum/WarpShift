@@ -147,8 +147,8 @@
             public static (StringMap, int limit) S1(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (2, 2), (0, 1), (1, 0),
-                    Field.RightBottom, new Field((Open.Left, Color.P)),
-                    new Field((Open.Right, Color.P)), Field.Closed);
+                    Field.RightBottom, new Field((O.Left, C.P)),
+                    new Field((O.Right, C.P)), Field.Closed);
 
                 return (m, 2);
             }
@@ -156,8 +156,8 @@
             public static (StringMap, int limit) S2(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 2), (0, 0), (0, 1),
-                    Field.Bottom, new Field((Open.Left, Color.P), (Open.Right, Color.N)), Field.Left,
-                    new Field((Open.Right, Color.P)), Field.Closed, Field.TopLeft);
+                    Field.Bottom, new Field((O.Left, C.P), (O.Right, C.N)), Field.Left,
+                    new Field((O.Right, C.P)), Field.Closed, Field.TopLeft);
 
                 return (m, 5);
             }
@@ -165,8 +165,8 @@
             public static (StringMap, int limit) S3(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 2), (0, 0), (1, 1),
-                    Field.Bottom, Field.Right, new Field((Open.Bottom, Color.P), (Open.Right, Color.P)),
-                    Field.Closed, new Field((Open.Top, Color.P)), new Field((Open.Left, Color.P), (Open.Top, Color.N)));
+                    Field.Bottom, Field.Right, new Field((O.Bottom, C.P), (O.Right, C.P)),
+                    Field.Closed, new Field((O.Top, C.P)), new Field((O.Left, C.P), (O.Top, C.N)));
 
                 return (m, 5);
             }
@@ -174,8 +174,8 @@
             public static (StringMap, int limit) S4(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 2), (0, 1), (2, 1),
-                    new Field((Open.Left, Color.P), (Open.Bottom, Color.P)), Field.Right, new Field((Open.Left, Color.N), (Open.Right, Color.P), (Open.Bottom, Color.N)),
-                    Field.RightTop, Field.Left, new Field((Open.Top, Color.P)));
+                    new Field((O.Left, C.P), (O.Bottom, C.P)), Field.Right, new Field((O.Left, C.N), (O.Right, C.P), (O.Bottom, C.N)),
+                    Field.RightTop, Field.Left, new Field((O.Top, C.P)));
 
                 return (m, 5);
             }
@@ -183,8 +183,8 @@
             public static (StringMap, int limit) S5(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 2), (1, 0), (1, 1),
-                    new Field((Open.Left, Color.P), (Open.Bottom, Color.P)), Field.Right, new Field((Open.Left, Color.N), (Open.Right, Color.P)),
-                    new Field((Open.Left, Color.N), (Open.Bottom, Color.P)), Field.PinkTop, Field.Closed);
+                    new Field((O.Left, C.P), (O.Bottom, C.P)), Field.Right, new Field((O.Left, C.N), (O.Right, C.P)),
+                    new Field((O.Left, C.N), (O.Bottom, C.P)), Field.PinkTop, Field.Closed);
 
                 return (m, 4);
             }
@@ -193,7 +193,7 @@
             {
                 var m = new StringMap(shifter, (3, 3), (0, 0), (2, 0),
                     Field.Right, Field.BottomLeft, Field.PinkBottom,
-                    new Field((Open.Top, Color.P), (Open.Right, Color.N), (Open.Bottom, Color.N)), Field.TopLeft, new Field((Open.Top, Color.P), (Open.Bottom, Color.N)),
+                    new Field((O.Top, C.P), (O.Right, C.N), (O.Bottom, C.N)), Field.TopLeft, new Field((O.Top, C.P), (O.Bottom, C.N)),
                     Field.RightTop, Field.RightLeft, Field.TopLeft);
 
                 return (m, 5);
@@ -202,8 +202,8 @@
             public static (StringMap, int limit) S7(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 3), (0, 2), (1, 1),
-                    new Field((Open.Bottom, Color.N), (Open.Right, Color.P)), Field.Closed, Field.Closed,
-                    Field.Closed, new Field((Open.Left, Color.P), (Open.Right, Color.P)), new Field((Open.Right, Color.P), (Open.Bottom, Color.N)),
+                    new Field((O.Bottom, C.N), (O.Right, C.P)), Field.Closed, Field.Closed,
+                    Field.Closed, new Field((O.Left, C.P), (O.Right, C.P)), new Field((O.Right, C.P), (O.Bottom, C.N)),
                     Field.Right, Field.TopLeft, Field.RightTop);
 
                 return (m, 5);
@@ -212,8 +212,8 @@
             public static (StringMap, int limit) S8(IMapShifter shifter)
             {
                 var m = new StringMap(shifter, (3, 3), (2, 2), (0, 1),
-                    new Field((Open.Top, Color.N), (Open.Bottom, Color.P)), Field.Closed, Field.Closed,
-                    Field.PinkLeft, Field.RightLeft, new Field((Open.Left, Color.N), (Open.Top, Color.P), (Open.Right, Color.P)),
+                    new Field((O.Top, C.N), (O.Bottom, C.P)), Field.Closed, Field.Closed,
+                    Field.PinkLeft, Field.RightLeft, new Field((O.Left, C.N), (O.Top, C.P), (O.Right, C.P)),
                     Field.RightBottom, Field.RightLeft, Field.Left);
 
                 return (m, 5);
@@ -224,7 +224,7 @@
                 var m = new StringMap(shifter, (3, 3), (1, 1), (0, 1),
                     Field.RightTop, Field.RightLeft, Field.BottomLeft,
                     Field.PinkRight, Field.Right, Field.TopLeft,
-                    Field.Closed, Field.Closed, new Field((Open.Top, Color.N), (Open.Left, Color.P), (Open.Bottom, Color.N)));
+                    Field.Closed, Field.Closed, new Field((O.Top, C.N), (O.Left, C.P), (O.Bottom, C.N)));
                 return (m, 6);
             }
 
@@ -233,7 +233,7 @@
             {
                 var m = new StringMap(shifter, (3, 3), (0,0), (0, 2),
                     Field.Right, Field.BottomLeft, Field.Closed,
-                    Field.PinkLeft, Field.RightTop, new Field((Open.Left, Color.N), (Open.Right, Color.P), (Open.Bottom, Color.N)),
+                    Field.PinkLeft, Field.RightTop, new Field((O.Left, C.N), (O.Right, C.P), (O.Bottom, C.N)),
                     Field.PinkRight, Field.Right, Field.TopLeft);
                 m.AddChip((0, 1));
                 return (m, 7);
@@ -243,10 +243,58 @@
             {
                 var m = new StringMap(shifter, (3, 3), (0, 0), (2, 2),
                     Field.PinkRight,Field.Closed,Field.PinkLeft,
-                    Field.PinkLeft, new Field((Open.Left, Color.P),(Open.Right, Color.N)), Field.PinkRight,
+                    Field.PinkLeft, new Field((O.Left, C.P),(O.Right, C.N)), Field.PinkRight,
                     Field.PinkRight, Field.Closed, Field.Left);
                 m.AddChip((0, 2));
                 return (m, 6);
+            }
+
+            public static (StringMap, int limit) S12(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (2, 0), (1, 2),
+                    Field.RightBottom, Field.RightLeft, new Field((O.Left, C.N), (O.Bottom, C.P)),
+                    Field.RightTopBottom, new Field((O.Left, C.N), (O.Top, C.P)), Field.Closed,
+                    new Field((O.Left, C.P), (O.Top, C.N)), new Field((O.Top, C.P), (O.Right, C.P)), new Field((O.Left, C.P), (O.Right, C.P)));
+                m.AddChip((1, 1));
+                return (m, 6);
+            }
+
+            public static (StringMap, int limit) S13(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (1, 1), (0, 1),
+                    Field.Right, Field.RightLeftBottom, Field.Left,
+                    Field.PinkLeft, new Field((O.Left, C.P), (O.Right, C.P), (O.Top, C.N), (O.Bottom, C.N)), Field.PinkRight,
+                    Field.Right, Field.RightLeftTop, Field.Left);
+                m.AddChip((2, 1));
+                return (m, 6);
+            }
+
+            public static (StringMap, int limit) S14(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 0), (2, 0),
+                    new Field((O.Left, C.P), (O.Right, C.P)), Field.Closed, Field.Left,
+                    new Field((O.Top, C.P), (O.Right, C.N)), Field.Closed, new Field((O.Top, C.P), (O.Bottom, C.P)),
+                    new Field((O.Right, C.P), (O.Bottom, C.P)), Field.Closed, Field.Closed);
+                m.AddChip((0, 2));
+                return (m, 7);
+            }
+
+            public static (StringMap, int limit) S15(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 0), (2, 1),
+                    Field.PinkRight,
+                    new Field((O.Left, C.P), (O.Bottom, C.N), (O.Right, C.P)),
+                    new Field((O.Left, C.P), (O.Bottom, C.P)),
+                    new Field((O.Top, C.P), (O.Right, C.N)),
+                    new Field((O.Top, C.P), (O.Bottom, C.P)),
+                    Field.Bottom,
+                    new Field((O.Top, C.N), (O.Bottom, C.P)),
+                    new Field((O.Top, C.N), (O.Right, C.P)),
+                    new Field((O.Left, C.N), (O.Top, C.P)));
+
+
+                m.AddChip((1, 1));
+                return (m, 9);
             }
         }
     }

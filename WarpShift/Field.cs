@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace WarpShift
 {
     [Flags]
-    public enum Color
+    public enum C
     {
         N = 1,
         P = 2
@@ -13,15 +13,15 @@ namespace WarpShift
 
     public struct Field
     {
-        public Field(Open open)
+        public Field(O open)
         {
             OpenWalls = open;
-            doorColors = new Dictionary<Open, Color>();
+            doorColors = new Dictionary<O, C>();
         }
-        public Field(params (Open, Color)[] color)
+        public Field(params (O, C)[] color)
         {
-            OpenWalls = Open.None;
-            doorColors = new Dictionary<Open, Color>();
+            OpenWalls = O.None;
+            doorColors = new Dictionary<O, C>();
             foreach (var c in color)
             {
                 doorColors[c.Item1] = c.Item2;
@@ -31,63 +31,63 @@ namespace WarpShift
 
         public const string e = "-";
         public const string x = "x";
-        public static Dictionary<Color, string> colorToString = new Dictionary<Color, string>()
+        public static Dictionary<C, string> colorToString = new Dictionary<C, string>()
         {
-            {WarpShift.Color.P, "p" },
-            {WarpShift.Color.N, "x" }
+            {WarpShift.C.P, "p" },
+            {WarpShift.C.N, "x" }
         };
-        public Open OpenWalls;
+        public O OpenWalls;
 
-        public Dictionary<Open, Color> doorColors;
+        public Dictionary<O, C> doorColors;
 
-        public bool IsOpen(Open o) => (o & OpenWalls) == o;
+        public bool IsOpen(O o) => (o & OpenWalls) == o;
 
         // none
-        public static Field Closed = new Field() { OpenWalls = Open.None };
+        public static Field Closed = new Field() { OpenWalls = O.None };
 
         // single
-        public static Field PinkTop = new Field((Open.Top, WarpShift.Color.P));
-        public static Field PinkBottom = new Field((Open.Bottom, WarpShift.Color.P));
-        public static Field PinkLeft = new Field((Open.Left, WarpShift.Color.P));
-        public static Field PinkRight = new Field((Open.Right, WarpShift.Color.P));
+        public static Field PinkTop = new Field((O.Top, WarpShift.C.P));
+        public static Field PinkBottom = new Field((O.Bottom, WarpShift.C.P));
+        public static Field PinkLeft = new Field((O.Left, WarpShift.C.P));
+        public static Field PinkRight = new Field((O.Right, WarpShift.C.P));
 
-        public static Field Top = new Field() { OpenWalls = Open.Top };
-        public static Field Bottom = new Field() { OpenWalls = Open.Bottom };
-        public static Field Left = new Field() { OpenWalls = Open.Left };
-        public static Field Right = new Field() { OpenWalls = Open.Right };
+        public static Field Top = new Field() { OpenWalls = O.Top };
+        public static Field Bottom = new Field() { OpenWalls = O.Bottom };
+        public static Field Left = new Field() { OpenWalls = O.Left };
+        public static Field Right = new Field() { OpenWalls = O.Right };
 
         // right
-        public static Field RightLeft = new Field() { OpenWalls = Open.Right | Open.Left };
-        public static Field RightBottom = new Field() { OpenWalls = Open.Right | Open.Bottom };
-        public static Field RightTop = new Field() { OpenWalls = Open.Right | Open.Top };
+        public static Field RightLeft = new Field() { OpenWalls = O.Right | O.Left };
+        public static Field RightBottom = new Field() { OpenWalls = O.Right | O.Bottom };
+        public static Field RightTop = new Field() { OpenWalls = O.Right | O.Top };
 
-        public static Field RightLeftBottom = new Field() { OpenWalls = Open.Right | Open.Left | Open.Bottom };
-        public static Field RightLeftTop = new Field() { OpenWalls = Open.Right | Open.Left | Open.Top };
+        public static Field RightLeftBottom = new Field() { OpenWalls = O.Right | O.Left | O.Bottom };
+        public static Field RightLeftTop = new Field() { OpenWalls = O.Right | O.Left | O.Top };
 
-        public static Field RightTopBottom = new Field() { OpenWalls = Open.Right | Open.Bottom | Open.Top };
+        public static Field RightTopBottom = new Field() { OpenWalls = O.Right | O.Bottom | O.Top };
 
         // top
-        public static Field TopBottom = new Field() { OpenWalls = Open.Top | Open.Bottom };
-        public static Field TopLeft = new Field() { OpenWalls = Open.Top | Open.Left };
-        public static Field TopBottomLeft = new Field() { OpenWalls = Open.Top | Open.Bottom | Open.Left };
+        public static Field TopBottom = new Field() { OpenWalls = O.Top | O.Bottom };
+        public static Field TopLeft = new Field() { OpenWalls = O.Top | O.Left };
+        public static Field TopBottomLeft = new Field() { OpenWalls = O.Top | O.Bottom | O.Left };
 
         // bottom
-        public static Field BottomLeft = new Field() { OpenWalls = Open.Bottom | Open.Left };
+        public static Field BottomLeft = new Field() { OpenWalls = O.Bottom | O.Left };
 
         // all
-        public static Field All = new Field() { OpenWalls = Open.Right | Open.Bottom | Open.Top | Open.Left };
+        public static Field All = new Field() { OpenWalls = O.Right | O.Bottom | O.Top | O.Left };
 
-        internal static bool IsOpen(Field f1, Open o1, Field f2, Open o2)
+        internal static bool IsOpen(Field f1, O o1, Field f2, O o2)
         {
 
             return f1.IsOpen(o1) && f2.IsOpen(o2)
                 && f1.Color(o1) == f2.Color(o2);
         }
 
-        private Color Color(Open direction)
+        private C Color(O direction)
         {
             if (doorColors == null || doorColors.Count == 0 || !doorColors.ContainsKey(direction))
-                return WarpShift.Color.N;
+                return WarpShift.C.N;
 
             return doorColors[direction];
         }
@@ -115,10 +115,10 @@ namespace WarpShift
 
         public override string ToString()
         {
-            return SerializeDoor(Open.Top) + SerializeDoor(Open.Right) + SerializeDoor(Open.Bottom) + SerializeDoor(Open.Left);
+            return SerializeDoor(O.Top) + SerializeDoor(O.Right) + SerializeDoor(O.Bottom) + SerializeDoor(O.Left);
         }
 
-        public string SerializeDoor(Open o)
+        public string SerializeDoor(O o)
         {
             var a = (this.OpenWalls & o) != 0;
 
@@ -136,18 +136,18 @@ namespace WarpShift
         public static Field FromString(string s)
         {
             Field f = new Field();
-            Open value = Open.None;
+            O value = O.None;
 
-            var list = new[] { Open.Top, Open.Right, Open.Bottom, Open.Left };
+            var list = new[] { O.Top, O.Right, O.Bottom, O.Left };
             foreach (var c in s.Zip(list, (s1,s2) => (s1, s2)))
             {
                 if (c.Item1 == 'p')
                 {
                     value |= c.Item2;
                     if (f.doorColors == null)
-                        f.doorColors = new Dictionary<Open, Color>();
+                        f.doorColors = new Dictionary<O, C>();
 
-                    f.doorColors[c.Item2] = WarpShift.Color.P;
+                    f.doorColors[c.Item2] = WarpShift.C.P;
                 }
                 else if (c.Item1 == 'x')
                 {

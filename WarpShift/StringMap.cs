@@ -119,8 +119,8 @@ namespace WarpShift
             // TODO: either try entire path
             //var canRight = Field.IsOpen(f, Open.Right, t, Open.Left);
             //var canLeft = Field.IsOpen(f, Open.Left, t, Open.Right);
-            var canRight = f.IsOpen(Open.Right) && t.IsOpen(Open.Left);
-            var canLeft = f.IsOpen(Open.Left) && t.IsOpen(Open.Right);
+            var canRight = f.IsOpen(O.Right) && t.IsOpen(O.Left);
+            var canLeft = f.IsOpen(O.Left) && t.IsOpen(O.Right);
             //return fIsLeft ? canRight : canLeft;
             return canRight || canLeft;
         }
@@ -134,8 +134,8 @@ namespace WarpShift
             // TODO: either try entire path
             //var canDown = Field.IsOpen(f, Open.Bottom, t, Open.Top);
             //var canUp = Field.IsOpen(f, Open.Top, t, Open.Bottom);
-            var canDown = f.IsOpen(Open.Bottom) && t.IsOpen(Open.Top);
-            var canUp = f.IsOpen(Open.Top) && t.IsOpen(Open.Bottom);
+            var canDown = f.IsOpen(O.Bottom) && t.IsOpen(O.Top);
+            var canUp = f.IsOpen(O.Top) && t.IsOpen(O.Bottom);
 
             //return fIsAbove ? canDown : canUp;
             return canDown || canUp;
