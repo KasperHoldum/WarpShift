@@ -9,7 +9,7 @@ namespace WarpShift
 
         public string Serialize()
         {
-            return $"{map} {x} {y}";
+            return $"{map}{x}{y}{(chipPickedUp ? 0 : 1)}{chip.x}{chip.y}";
         }
 
         public StringMap(IMapShifter shifter, int size, (int, int) start, (int, int) goal, params Field[] fields):
@@ -47,12 +47,13 @@ namespace WarpShift
 
         public int x, y;
         public int gx, gy;
+        public (int x, int y) chip;
 
         private IMapShifter shifter;
         public (int width, int height) size;
 
-        public bool IsSolved => x == gx && y == gy;
-
+        public bool IsSolved => x == gx && y == gy && chipPickedUp;
+        private bool chipPickedUp = true;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetIndex(int x, int y) => x * _f + (y * _f * this.size.width);
 

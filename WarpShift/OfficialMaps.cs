@@ -227,6 +227,27 @@
                     Field.Closed, Field.Closed, new Field((Open.Top, Color.N), (Open.Left, Color.P), (Open.Bottom, Color.N)));
                 return (m, 6);
             }
+
+
+            public static (StringMap, int limit) S10(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0,0), (0, 2),
+                    Field.Right, Field.BottomLeft, Field.Closed,
+                    Field.PinkLeft, Field.RightTop, new Field((Open.Left, Color.N), (Open.Right, Color.P), (Open.Bottom, Color.N)),
+                    Field.PinkRight, Field.Right, Field.TopLeft);
+                m.chip = (0, 1);
+                return (m, 7);
+            }
+
+            public static (StringMap, int limit) S11(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 0), (0, 2),
+                    Field.PinkRight,Field.Closed,Field.PinkLeft,
+                    Field.PinkLeft, new Field((Open.Left, Color.P),(Open.Right, Color.N)), Field.PinkRight,
+                    Field.PinkRight, Field.Closed, Field.Left);
+                m.chip = (0, 2);
+                return (m, 6);
+            }
         }
     }
 }

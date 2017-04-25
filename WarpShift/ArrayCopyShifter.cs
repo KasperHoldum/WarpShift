@@ -10,6 +10,10 @@
             var moveGoalHor = cmd.Horizontal && cmd.Line == m.gy;
             var moveGoalVer = !cmd.Horizontal && cmd.Line == m.gx;
 
+            var moveChipHor = cmd.Horizontal && cmd.Line == m.chip.x;
+            var moveChipVer = !cmd.Horizontal && cmd.Line == m.chip.y;
+
+
             var x = cmd.Horizontal ? cmd.Line : 0;
             var y = !cmd.Horizontal ? cmd.Line : 0;
             var p = cmd.Positive;
@@ -29,6 +33,8 @@
                     m.x = mod(m.x + pm, m.size.width);// (m.x + pm) % (m.length);
                 if (moveGoalHor)
                     m.gx = mod(m.gx + pm, m.size.width);
+                if (moveChipHor)
+                    m.chip.x = mod(m.chip.x + pm, m.size.width);
                 if (p)
                 {
 
@@ -57,6 +63,8 @@
                     m.y = mod(m.y + pm, m.size.height);
                 if (moveGoalVer)
                     m.gy = mod(m.gy + pm, m.size.height);
+                if (moveChipVer)
+                    m.chip.y = mod(m.chip.y + pm, m.size.height);
 
                 if (p)
                 {
