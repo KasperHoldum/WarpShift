@@ -6,14 +6,49 @@ using System.Threading.Tasks;
 
 namespace WarpShift
 {
-    public class FieldSerializer
+    public class Timer
     {
-        public string Serialize(Field f)
+        public class DisposeObject : IDisposable
         {
-            return f.IsOpen(Open.Top) ? "x" : " " +
-                (f.IsOpen(Open.Right) ? "x" : " ") +
-                (f.IsOpen(Open.Bottom) ? "x" : " ") +
-                (f.IsOpen(Open.Left) ? "x" : " ");
+            private Action action;
+
+            public DisposeObject(Action action)
+            {
+                this.action = action;
+            }
+
+            public void Dispose()
+            {
+                action();
+            }
+        }
+        public static Dictionary<string, (double ms, int count)> stats = new Dictionary<string, (double, int)>();
+        public static DisposeObject T(string name)
+        {
+            var before = DateTime.UtcNow;
+
+            return new DisposeObject(() =>
+            {
+                var ts = DateTime.UtcNow - before;
+                var ms = ts.TotalMilliseconds;
+
+                if (stats.ContainsKey(name))
+                {
+                    stats[name] = (stats[name].ms + ms, stats[name].count + 1);
+                }
+                else
+                {
+                    stats[name] = (ms, 1);
+                }
+            });
+        }
+
+        public static void Print()
+        {
+            foreach (var item in stats)
+            {
+                Console.WriteLine($"{item.Key}, {Math.Round(item.Value.ms,0)}ms in {item.Value.count}");
+            }
         }
     }
 
@@ -26,46 +61,78 @@ namespace WarpShift
 
         private Dictionary<string, int> seenMaps = new Dictionary<string, int>();
         private int limit;
-
+        public int solved = 0;
         public List<(StringMap, string)> Solve(StringMap map, int counter = 0)
         {
-            if (map.IsSolved)
-                return new List<(StringMap, string)>() { };
+            using (Timer.T("IsSolved"))
+            {
+                if (map.IsSolved)
+                {
+                    //return new List<(StringMap, string)>() { };
+                    solved++;
+                    return null;
+                }
+            }
+
+            int movesLeft = limit - counter;
+
+            var dg = map.DistanceToGoal();
+            if (dg > movesLeft)
+                return null;
+
+
 
             if (limit <= counter)
                 return null;
 
-            var serialized = map.Serialize();
+            using (Timer.T("Map.Serialize"))
+            {
+                var serialized = map.Serialize();
 
-            if (seenMaps.ContainsKey(serialized))
-                if (seenMaps[serialized] < counter)
-                    return null;
+                if (seenMaps.ContainsKey(serialized))
+                    if (seenMaps[serialized] < counter)
+                        return null;
+                    else
+                        seenMaps[serialized] = counter;
                 else
                     seenMaps[serialized] = counter;
-            else
-                seenMaps[serialized] = counter;
-            foreach (var cmd in GetAvailableMoveCommands(map))
+            }
+            using (Timer.T($"Move{counter}"))
             {
-                var m = map.Execute(cmd);
-                var m2 = Solve(m, counter + 1);
-
-                if (m2 != null)
+                foreach (var cmd in GetAvailableMoveCommands(map))
                 {
-                    m2.Insert(0, (m, cmd.ToString()));
-                    return m2;
-                }
+                    using (Timer.T("MoveExecute"))
+                    {
+                        var m = map.Execute(cmd);
+                        var m2 = Solve(m, counter + 1);
 
+                        if (m2 != null)
+                        {
+                            m2.Insert(0, (m, cmd.ToString()));
+                            return m2;
+                        }
+                    }
+
+                }
             }
 
-            foreach (var cmd in GetAvailableShiftCommands(map))
+            using (Timer.T($"Shift{counter}"))
             {
-                var m = map.Execute(cmd);
-                var m2 = Solve(m, counter + 1);
-
-                if (m2 != null)
+                foreach (var cmd in GetAvailableShiftCommands(map))
                 {
-                    m2.Insert(0, (m, cmd.ToString()));
-                    return m2;
+                    StringMap m;
+                    using (Timer.T("ShiftExecute"))
+                    {
+                        m = map.Execute(cmd);
+                    }
+                    var m2 = Solve(m, counter + 1);
+
+                    if (m2 != null)
+                    {
+                        m2.Insert(0, (m, cmd.ToString()));
+                        return m2;
+                    }
+
                 }
             }
 

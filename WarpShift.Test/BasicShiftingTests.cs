@@ -8,7 +8,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void HorizontalPositiveShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var newMap = map.Execute(new ShiftCommand() { Horizontal = true, Positive = true, Line = 0 });
 
@@ -19,7 +19,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void HorizontalNegativeShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var newMap = map.Execute(new ShiftCommand() { Horizontal = true, Positive = false, Line = 0 });
 
@@ -30,7 +30,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void VerticalPositiveShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
            var newMap =  map.Execute(new ShiftCommand() { Horizontal = false, Positive = true, Line = 0 });
 
@@ -41,7 +41,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void VerticalNegativeShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var newMap = map.Execute(new ShiftCommand() { Horizontal = false, Positive = false, Line = 0 });
 
@@ -52,7 +52,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void HorizontalPositiveLineShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var newMap = map.Execute(new ShiftCommand() { Horizontal = true, Positive = true, Line = 1 });
 
@@ -63,7 +63,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void HorizontalNegativeLineShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var newMap = map.Execute(new ShiftCommand() { Horizontal = true, Positive = false, Line = 1 });
 
@@ -74,7 +74,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void VerticalPositiveLineShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = true, Line = 1 });
 
@@ -85,7 +85,7 @@ namespace WarpShift.Test
         [TestMethod]
         public void VerticalNegativeLineShift()
         {
-            var map = MapTestScenarios.Scenario1_2x2(new MapShifter());
+            var map = MapTestScenarios.Scenario1_2x2(new StringMapShifter());
 
             var nm = map.Execute(new ShiftCommand() { Horizontal = false, Positive = false, Line = 1 });
 

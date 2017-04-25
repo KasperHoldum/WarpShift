@@ -1,6 +1,6 @@
 ﻿namespace WarpShift
 {
-    public class MapShifter : IMapShifter
+    public class StringMapShifter : IMapShifter
     {
         public void Shift(ShiftCommand cmd, StringMap m)
         {
@@ -10,8 +10,8 @@
             var moveGoalHor = cmd.Horizontal && cmd.Line == m.gy;
             var moveGoalVer = !cmd.Horizontal && cmd.Line == m.gx;
 
-            var moveChipHor = cmd.Horizontal && cmd.Line == m.chip.x;
-            var moveChipVer = !cmd.Horizontal && cmd.Line == m.chip.y;
+            var moveChipHor = cmd.Horizontal && cmd.Line == m.chip.y;
+            var moveChipVer = !cmd.Horizontal && cmd.Line == m.chip.x;
 
 
             var x = cmd.Horizontal ? cmd.Line : 0;

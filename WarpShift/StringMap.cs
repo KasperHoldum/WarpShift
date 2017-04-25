@@ -12,8 +12,9 @@ namespace WarpShift
             return $"{map}{x}{y}{(chipPickedUp ? 0 : 1)}{chip.x}{chip.y}";
         }
 
-        public StringMap(IMapShifter shifter, int size, (int, int) start, (int, int) goal, params Field[] fields):
-            this(shifter, (size, size), start, goal, fields){}
+        public StringMap(IMapShifter shifter, int size, (int, int) start, (int, int) goal, params Field[] fields) :
+            this(shifter, (size, size), start, goal, fields)
+        { }
 
         public StringMap(IMapShifter shifter, (int width, int height) size, (int, int) start, (int, int) goal, params Field[] fields)
         {
@@ -38,7 +39,7 @@ namespace WarpShift
             }
         }
 
-        private StringMap(IMapShifter shifter, (int, int) size, string map, int x, int y, int gx, int gy) : this(shifter, size, (x,y), (gx, gy))
+        private StringMap(IMapShifter shifter, (int, int) size, string map, int x, int y, int gx, int gy) : this(shifter, size, (x, y), (gx, gy))
         {
             this.map = map;
         }
@@ -48,23 +49,119 @@ namespace WarpShift
         public int x, y;
         public int gx, gy;
         public (int x, int y) chip;
-
+        public bool hasChip = false;
         private IMapShifter shifter;
         public (int width, int height) size;
 
+        public void AddChip((int, int) c)
+        {
+            hasChip = true;
+            chipPickedUp = false;
+            chip = c;
+        }
+
         public bool IsSolved => x == gx && y == gy && chipPickedUp;
         private bool chipPickedUp = true;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetIndex(int x, int y) => x * _f + (y * _f * this.size.width);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private int PlayerDistance((int x, int y) to)
+        {
+            return Distance((x, y), to, true);
+        }
+
+        private int Distance((int x, int y) from, (int x, int y) to, bool isPlayer = false)
+        {
+            var dx = Math.Abs(from.x - to.x);
+            var dy = Math.Abs(from.y - to.y);
+
+            var cheatX = this.size.width - dx;
+            var cheatY = this.size.height - dy;
+
+            var cheatedX = cheatX < dx;
+            var cheatedY = cheatY < dy;
+
+            var xDistance = Math.Min(cheatX, dx);
+            var yDistance = Math.Min(cheatY, dy);
+
+            // can't rotate to goal :D
+            {
+                if (xDistance == 0)
+                {
+                    var canVert = CanConnectVertical(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
+                    if (cheatedY)
+                        return yDistance + 1 + (canVert ? 0 : 1);
+                    return yDistance + (canVert ? 0 : 2);
+                }
+
+                if (yDistance == 0)
+                {
+                    var canHor = CanConnectHorizontal(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
+                    if (cheatedX)
+                        return xDistance + 1 + (canHor ? 0 : 1);
+
+                    return xDistance + (canHor ? 0 : 2);
+                }
+            }
+
+            //if (xDistance == 0 &&)
+
+            return xDistance + yDistance;
+        }
+
+        private bool CanConnectHorizontal((int x, int y) from, (int x, int y) to)
+        {
+            var f = Get(from.x, from.y);
+            var t = Get(to.x, to.y);
+
+            var fIsLeft = from.x < to.x;
+            // TODO: either try entire path
+            //var canRight = Field.IsOpen(f, Open.Right, t, Open.Left);
+            //var canLeft = Field.IsOpen(f, Open.Left, t, Open.Right);
+            var canRight = f.IsOpen(Open.Right) && t.IsOpen(Open.Left);
+            var canLeft = f.IsOpen(Open.Left) && t.IsOpen(Open.Right);
+            //return fIsLeft ? canRight : canLeft;
+            return canRight || canLeft;
+        }
+
+        private bool CanConnectVertical((int x, int y) from, (int x, int y) to)
+        {
+            var f = Get(from.x, from.y);
+            var t = Get(to.x, to.y);
+
+            var fIsAbove = from.y < to.y;
+            // TODO: either try entire path
+            //var canDown = Field.IsOpen(f, Open.Bottom, t, Open.Top);
+            //var canUp = Field.IsOpen(f, Open.Top, t, Open.Bottom);
+            var canDown = f.IsOpen(Open.Bottom) && t.IsOpen(Open.Top);
+            var canUp = f.IsOpen(Open.Top) && t.IsOpen(Open.Bottom);
+
+            //return fIsAbove ? canDown : canUp;
+            return canDown || canUp;
+        }
+
+        public int DistanceToGoal()
+        {
+            if (chipPickedUp)
+            {
+                return PlayerDistance((gx, gy));
+            }
+            else
+            {
+                return PlayerDistance(chip) + Distance(chip, (gx, gy));
+            }
+        }
+
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Field Get(int x, int y)
         {
             var startIndex = GetIndex(x, y);
 
             return Field.FromString(map.Substring(startIndex, _f));
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Set(int x, int y, Field value)
         {
             var index = GetIndex(x, y);
@@ -78,24 +175,38 @@ namespace WarpShift
             //if (cmd.toX - x + cmd.toY - y == 1)
             clone.x = cmd.toX;
             clone.y = cmd.toY;
+
+            if (cmd.toX == clone.chip.x && cmd.toY == clone.chip.y)
+                clone.chipPickedUp = true;
             return clone;
         }
 
         public StringMap Clone()
         {
-            return new StringMap(this.shifter, this.size, this.map, this.x, this.y, this.gx, this.gy);
+            var clone = new StringMap(this.shifter, this.size, this.map, this.x, this.y, this.gx, this.gy);
+
+            clone.chip = this.chip;
+            clone.chipPickedUp = this.chipPickedUp;
+            clone.hasChip = this.hasChip;
+            return clone;
         }
 
 
         public StringMap Execute(ShiftCommand cmd)
         {
-            var clone = this.Clone();
+            StringMap clone;
+            using (Timer.T("Clone"))
+            {
+                clone = this.Clone();
+            }
             // move player
             var movePlayer = cmd.Line == x || cmd.Line == y;
 
-            // move map
-            shifter.Shift(cmd, clone);
-
+            using (Timer.T("Shifter.Shift"))
+            {
+                // move map
+                shifter.Shift(cmd, clone);
+            }
             return clone;
         }
     }
