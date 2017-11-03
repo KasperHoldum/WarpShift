@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace WarpShift
@@ -9,7 +11,7 @@ namespace WarpShift
 
         public string Serialize()
         {
-            return $"{map}{x}{y}{(chipPickedUp ? 0 : 1)}{chip.x}{chip.y}";
+            return $"{map}{x}{y}{(chipPickedUp ? 0 : 1)}{chip.x}{chip.y}{lockLoc.x}{lockLoc.y}{(locked ? 0 : 1)}";
         }
 
         public StringMap(IMapShifter shifter, int size, (int, int) start, (int, int) goal, params Field[] fields) :
@@ -73,6 +75,8 @@ namespace WarpShift
 
         private int Distance((int x, int y) from, (int x, int y) to, bool isPlayer = false)
         {
+            var candidates = new List<int>();
+
             var dx = Math.Abs(from.x - to.x);
             var dy = Math.Abs(from.y - to.y);
 
@@ -85,24 +89,27 @@ namespace WarpShift
             var xDistance = Math.Min(cheatX, dx);
             var yDistance = Math.Min(cheatY, dy);
 
-            // can't rotate to goal :D
+            if (xDistance == 0)
             {
-                if (xDistance == 0)
+                var canVert = CanConnectVertical(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
+                if (cheatedY)
                 {
-                    var canVert = CanConnectVertical(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
-                    if (cheatedY)
-                        return yDistance + 1 + (canVert ? 0 : 1);
-                    return yDistance + (canVert ? 0 : 2);
+                    // distance + rotation + 
+                    candidates.Add(yDistance + 1 + (canVert ? 0 : 1));
                 }
 
-                if (yDistance == 0)
-                {
-                    var canHor = CanConnectHorizontal(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
-                    if (cheatedX)
-                        return xDistance + 1 + (canHor ? 0 : 1);
+                candidates.Add(yDistance + (canVert ? 0 : 2));
 
-                    return xDistance + (canHor ? 0 : 2);
-                }
+                return candidates.Min();
+            }
+
+            if (yDistance == 0)
+            {
+                var canHor = CanConnectHorizontal(from, to) || !isPlayer; // if its not player but chip to goal then map coulda changed
+                if (cheatedX)
+                    return xDistance + 1 + (canHor ? 0 : 1);
+
+                return xDistance + (canHor ? 0 : 2);
             }
 
             //if (xDistance == 0 &&)
@@ -121,7 +128,7 @@ namespace WarpShift
             //var canLeft = Field.IsOpen(f, Open.Left, t, Open.Right);
             var canRight = f.IsOpen(O.Right) && t.IsOpen(O.Left);
             var canLeft = f.IsOpen(O.Left) && t.IsOpen(O.Right);
-            //return fIsLeft ? canRight : canLeft;
+            //return fIsLeft ? canRight : canLeft; // not sure this is admissable 
             return canRight || canLeft;
         }
 
@@ -137,20 +144,30 @@ namespace WarpShift
             var canDown = f.IsOpen(O.Bottom) && t.IsOpen(O.Top);
             var canUp = f.IsOpen(O.Top) && t.IsOpen(O.Bottom);
 
-            //return fIsAbove ? canDown : canUp;
+            //return fIsAbove ? canDown : canUp; // not sure this is admissable 
             return canDown || canUp;
         }
 
         public int DistanceToGoal()
         {
-            if (chipPickedUp)
+            var distance = 0;
+
+            if (chipLocked && locked)
             {
-                return PlayerDistance((gx, gy));
+                return PlayerDistance(lockLoc) + 2; // +1 for at least one step to goal, 1+ at least one step to unlock
             }
-            else
+            else // chip is freely available
             {
-                return PlayerDistance(chip) + Distance(chip, (gx, gy));
+                if (chipPickedUp)
+                {
+                    distance = PlayerDistance((gx, gy));
+                }
+                else
+                {
+                    distance = PlayerDistance(chip) + Distance(chip, (gx, gy));
+                }
             }
+            return distance;
         }
 
 
@@ -161,6 +178,12 @@ namespace WarpShift
 
             return Field.FromString(map.Substring(startIndex, _f));
         }
+
+        public Field Get((int x, int y) loc)
+        {
+            return Get(loc.x, loc.y);
+        }
+
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Set(int x, int y, Field value)
         {
@@ -178,6 +201,10 @@ namespace WarpShift
 
             if (cmd.toX == clone.chip.x && cmd.toY == clone.chip.y)
                 clone.chipPickedUp = true;
+
+            if (cmd.toX == lockLoc.x && cmd.toY == lockLoc.y)
+                clone.locked = false;
+
             return clone;
         }
 
@@ -188,6 +215,9 @@ namespace WarpShift
             clone.chip = this.chip;
             clone.chipPickedUp = this.chipPickedUp;
             clone.hasChip = this.hasChip;
+            clone.hasLocks = this.hasLocks;
+            clone.locked = this.locked;
+            clone.lockLoc = this.lockLoc;
             return clone;
         }
 
@@ -208,6 +238,27 @@ namespace WarpShift
                 shifter.Shift(cmd, clone);
             }
             return clone;
+        }
+
+        public bool hasLocks = false;
+        public (int x, int y) lockLoc;
+        public bool locked = true;
+
+        internal void AddLockHandle((int, int) p)
+        {
+            this.hasLocks = true;
+            lockLoc = p;
+            locked = true;
+        }
+
+        private bool chipLocked = false;
+        internal void FinalizeMap()
+        {
+            if (hasChip && hasLocks)
+            {
+                var f = Get(chip);
+                chipLocked = f.IsBehindLock();
+            }
         }
     }
 }

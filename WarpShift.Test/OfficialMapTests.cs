@@ -236,6 +236,23 @@ namespace WarpShift.Test
                 this.Test(abe);
             }
         }
+        [TestClass]
+        public class Chapter3 : OfficialMapTests
+        {
+            [TestMethod]
+            public void S01()
+            {
+                Func<IMapShifter, (StringMap, int)> abe = OfficialMaps.Chapter3.S01;
+                this.Test(abe);
+            }
+
+            [TestMethod]
+            public void S02()
+            {
+                Func<IMapShifter, (StringMap, int)> abe = OfficialMaps.Chapter3.S02;
+                this.Test(abe);
+            }
+        }
     }
     
 }

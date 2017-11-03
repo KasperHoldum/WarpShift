@@ -147,14 +147,14 @@ namespace WarpShift
             if (m.y > 0)
             {
                 var up = m.Get(m.x, m.y - 1);
-                if (Field.IsOpen(pp, O.Top, up, O.Bottom))
+                if (Field.IsOpen(pp, O.Top, up, O.Bottom,m.locked))
                 {
                     yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y - 1 };
                 }
             }
             if (m.y < m.size.height - 1)
             {
-                if (Field.IsOpen(pp, O.Bottom, m.Get(m.x, m.y + 1), O.Top))
+                if (Field.IsOpen(pp, O.Bottom, m.Get(m.x, m.y + 1), O.Top, m.locked))
                 {
                     yield return new MoveCommand(m.x, m.y) { toX = m.x, toY = m.y + 1 };
                 }
@@ -162,7 +162,7 @@ namespace WarpShift
 
             if (m.x > 0)
             {
-                if (Field.IsOpen(pp, O.Left, m.Get(m.x - 1, m.y), O.Right))
+                if (Field.IsOpen(pp, O.Left, m.Get(m.x - 1, m.y), O.Right, m.locked))
                 {
                     yield return new MoveCommand(m.x, m.y) { toX = m.x - 1, toY = m.y };
                 }
@@ -170,7 +170,7 @@ namespace WarpShift
 
             if (m.x < m.size.width - 1)
             {
-                if (Field.IsOpen(pp, O.Right, m.Get(m.x + 1, m.y), O.Left))
+                if (Field.IsOpen(pp, O.Right, m.Get(m.x + 1, m.y), O.Left, m.locked))
                 {
                     yield return new MoveCommand(m.x, m.y) { toX = m.x + 1, toY = m.y };
                 }

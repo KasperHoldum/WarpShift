@@ -297,5 +297,32 @@
                 return (m, 9);
             }
         }
+        public class Chapter3
+        {
+            public static (StringMap, int limit) S01(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 0), (2, 2),
+                    Field.Right, Field.RightLeft, Field.BottomLeft,
+                    new Field((O.Right, C.N), (O.Bottom, C.L)), Field.RightLeft, Field.TopLeft,
+                    Field.Closed, Field.Closed, new Field((O.Top, C.L)));
+
+                m.AddLockHandle((0, 1));
+                return (m, 5);
+            }
+
+            public static (StringMap, int limit) S02(IMapShifter shifter)
+            {
+                var m = new StringMap(shifter, (3, 3), (0, 2), (2, 0),
+                    Field.RightBottom, Field.BottomLeft, Field.Top,
+                    Field.TopBottom, Field.TopBottom,new Field((O.Bottom, C.L)),
+                    Field.Top, Field.RightTop, Field.Left);
+
+                m.AddChip((2, 1));
+                m.AddLockHandle((2, 2));
+                m.FinalizeMap();
+                return (m, 10);
+            }
+
+        }
     }
 }

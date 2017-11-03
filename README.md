@@ -13,10 +13,10 @@ Chapter progress:
 - Chapter 4: Not started
 
 Leaderboard:
-- Chapter 2-11: 59ms
-- Chapter 3-02: 14600ms
-- Chapter 3-05: 4900ms
-- Chapter 3-15: 15800ms
+- Chapter 2-11:     59ms
+- Chapter 3-02: 14.600ms
+- Chapter 3-05:  4.900ms
+- Chapter 3-15: 15.800ms
 
 Benchmarks for finding all optimal solutions:
 - Chapter 2-11: 26ms - 1 solution
